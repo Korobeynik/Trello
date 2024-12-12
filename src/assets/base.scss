@@ -1,0 +1,25 @@
+.el-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-row:last-child {
+    margin-bottom: 0;
+  }
+  .el-col {
+    border-radius: 4px;
+    background-color: #eee;
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .grid-content {
+    border-radius: 6px;
+    min-height: 36px;
+  }
+}
+
+.el-button {
+  min-width: 60px;
+}
