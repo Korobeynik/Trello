@@ -40,11 +40,13 @@
 
 <script>
 import { reactive, watch } from "vue";
+import { useTaskStore } from "@/stores/taskStore";
 
 export default {
   props: ["task"],
   emits: ["close", "save"],
   setup(props, { emit }) {
+    const taskStore = useTaskStore();
     const localTask = reactive({ ...props.task });
 
     const onSave = () => {
@@ -52,7 +54,11 @@ export default {
         alert("Title is required.");
         return;
       }
-      emit("save", { ...localTask });
+      if (!localTask.priority) {
+        localTask.priority = "Medium";
+      }
+      taskStore.saveTask({ ...localTask });
+      emit("close");
     };
 
     watch(
