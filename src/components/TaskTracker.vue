@@ -103,4 +103,16 @@ header {
 button {
   margin-right: 5px;
 }
+
+@media (max-width: 800px) {
+  .task-tracker {
+    padding: 0;
+  }
+  .columns {
+    flex-wrap: wrap;
+  }
+  .column {
+    width: 100%;
+  }
+}
 </style>

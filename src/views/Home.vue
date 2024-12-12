@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TaskTracker from "@/components/TaskTracker.vue";
+import TaskTracker from "../components/TaskTracker.vue";
 </script>
 
 <template>
@@ -14,7 +14,7 @@ import TaskTracker from "@/components/TaskTracker.vue";
 </template>
 
 <style lang="scss">
-@import "../assets/main";
+@use "../assets/main";
 main.el-main {
   position: relative;
   border-radius: 10px;
