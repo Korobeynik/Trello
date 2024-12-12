@@ -1,28 +1,41 @@
+import { defineStore } from 'pinia';
+import { reactive, ref, computed } from 'vue';
 
-import { defineStore } from "pinia";
-import { reactive, computed, ref } from "vue";
+export interface Task {
+  id: number | null;
+  title: string;
+  description: string;
+  assignee: string;
+  performers: string;
+  status: string;
+  priority: string;
+}
 
-export const useTaskStore = defineStore("taskStore", () => {
-  const statuses = ["TODO", "In progress", "Done"];
-  const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+interface PriorityOrder {
+  [key: string]: number;
+}
 
-  const tasks = reactive([]);
+export const useTaskStore = defineStore('taskStore', () => {
+  const statuses = ['TODO', 'In progress', 'Done'];
+  const priorityOrder: PriorityOrder = { High: 1, Medium: 2, Low: 3 };
 
-  const currentTask = reactive({
+  const tasks = reactive<Task[]>([]);
+
+  const currentTask = reactive<Task>({
     id: null,
-    title: "",
-    description: "",
-    assignee: "",
-    performers: "",
-    status: "TODO",
-    priority: "Medium",
+    title: '',
+    description: '',
+    assignee: '',
+    performers: '',
+    status: 'TODO',
+    priority: 'Medium',
   });
 
   const showModal = ref(false);
-  const draggedTask = ref(null);
+  const draggedTask = ref<Task | null>(null);
 
   const tasksByStatus = computed(() => {
-    return statuses.reduce((acc, status) => {
+    return statuses.reduce<Record<string, Task[]>>((acc, status) => {
       acc[status] = tasks
         .filter((task) => task.status === status)
         .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
@@ -30,18 +43,18 @@ export const useTaskStore = defineStore("taskStore", () => {
     }, {});
   });
 
-  const openTaskModal = (task) => {
+  const openTaskModal = (task?: Partial<Task>) => {
     if (task && task.id) {
       Object.assign(currentTask, task);
     } else {
       Object.assign(currentTask, {
         id: null,
-        title: "",
-        description: "",
-        assignee: "",
-        performers: "",
-        status: task?.status || "TODO",
-        priority: "Medium",
+        title: '',
+        description: '',
+        assignee: '',
+        performers: '',
+        status: task?.status || 'TODO',
+        priority: 'Medium',
       });
     }
     showModal.value = true;
@@ -51,13 +64,15 @@ export const useTaskStore = defineStore("taskStore", () => {
     showModal.value = false;
   };
 
-  const saveTask = (task) => {
+  const saveTask = (task: Task) => {
     if (!task.priority) {
-      task.priority = "Medium";
+      task.priority = 'Medium';
     }
     if (task.id) {
       const index = tasks.findIndex((t) => t.id === task.id);
-      tasks[index] = { ...task };
+      if (index !== -1) {
+        tasks[index] = { ...task };
+      }
     } else {
       task.id = Date.now();
       tasks.push({ ...task });
@@ -65,16 +80,16 @@ export const useTaskStore = defineStore("taskStore", () => {
     closeTaskModal();
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = (id: number) => {
     const index = tasks.findIndex((task) => task.id === id);
     if (index !== -1) tasks.splice(index, 1);
   };
 
-  const onDragStart = (task) => {
+  const onDragStart = (task: Task) => {
     draggedTask.value = task;
   };
-  
-  const onDropTask = (status) => {
+
+  const onDropTask = (status: string) => {
     if (draggedTask.value) {
       draggedTask.value.status = status;
       draggedTask.value = null;
@@ -95,4 +110,3 @@ export const useTaskStore = defineStore("taskStore", () => {
     onDropTask,
   };
 });
-

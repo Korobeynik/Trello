@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import TaskTracker from "../components/TaskTracker.vue";
 </script>
 
